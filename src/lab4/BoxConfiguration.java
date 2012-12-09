@@ -45,19 +45,11 @@ public class BoxConfiguration {
 	}
 	
 	/**
-	 * This might be initialized with a file or a box config read from a file.
-	 */
-	public void init() {
-		
-	}
-	
-	/**
 	 * Adds the box to an arrayList and creates the box object.
 	 * @param box
 	 */
 	public void addBox(Box box) {
 		this.boxes.add(box);
-//		System.out.println("Box " + box.getName() + " tillagd.");
 	}
 	
 	

@@ -14,7 +14,8 @@ public class Box {
 	 *                        Class variables                            *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
-	public static int MAXNUMBEROFBOXES = 100; // For the random int generator.
+	/* These aren't really used */
+	public static int MAXNUMBEROFBOXES = 100; // For the random int generator. Is not used.
 	public static int DEFAULTBOXHEIGHTINPIXELS = 64;
 	public static int DEFAULTBOXWIDTHINPIXELS = 64;
 	
@@ -25,7 +26,7 @@ public class Box {
 	/* Basic info about the box */
 	private String name;
 	private int weight;
-	private int levelSpan = 1; // How many levels the box spans. Default should be 1.
+	private int levelSpan = 1; // How many levels the box spans. Default is 1.
 	private int widthSpan = 1; // How wide the box is. A multiplier of DEFAULTBOXWIDTHINPIXELS
 	
 	/* Might not be used at all. */
@@ -33,7 +34,7 @@ public class Box {
 	private int height; // This should probably be a multiplier to DEFAULTBOXHEIGHTINPIXELS * levelSpan
 	
 	/* The boxes above and under */
-	public ArrayList<Box> boxesAbove;
+	public ArrayList<Box> boxesAbove; // Above isn't really needed.
 	public ArrayList<Box> boxesUnder;
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -146,11 +147,17 @@ public class Box {
 	}
 	
 	/**
-	 * Getter for name
-	 * @return
+	 * @return The name of the box.
 	 */
 	public String getName() {
 		return this.name;
+	}
+	
+	/**
+	 * @return The weight of the box.
+	 */
+	public int getWeight() {
+		return this.weight;
 	}
 
 	/**
@@ -169,5 +176,25 @@ public class Box {
 		}
 		System.out.print("Boxes under me: "+ boxUn +"\n");
 	}
+	
+	
+	/**
+	 * @return A string with the neighbouring boxes (up and down).
+	 */
+	public String getNeighbors() {
+		String response = "I'm box: "+ this.getName() + ". ";
+		String boxAb = "";
+		for (Box box : this.boxesAbove) {
+			boxAb += box.getName() + ", ";
+		}
+		response += "Boxes above me: "+ boxAb;
+		String boxUn = "";
+		for (Box box : this.boxesUnder) {
+			boxUn += box.getName() + ", ";
+		}
+		response += "Boxes under me: "+ boxUn +"\n";
+		return response;
+	}
+	
 }
 
