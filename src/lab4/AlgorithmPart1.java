@@ -37,7 +37,7 @@ public class AlgorithmPart1 {
 	/**
 	 * Default constructor
 	 */
-	public AlgorithmPart1() {
+	public AlgorithmPart1(JTextArea mainText) {
 		this.name = "Easy Algorithm";
 		this.mainText = mainText;
 	}
@@ -63,7 +63,7 @@ public class AlgorithmPart1 {
 					for (Box box : boxconfig.boxes) {
 						if (box.isTopBox()) {
 							boxconfig.remove(box);
-							MainFrame.appendScrolled("Box " + box.getName() + " was removed.");
+							mainText.append("Box " + box.getName() + " was removed.\n");
 							break;
 						}
 					}

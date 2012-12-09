@@ -13,13 +13,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
 
 public class MainFrame extends JFrame {
 
@@ -31,20 +31,19 @@ public class MainFrame extends JFrame {
 	public static String PROGRAMNAME = "LŒdor & co";
 	public static int MARGIN = 6; //Margin for all the components
 	public static String FILENAME;
-	
-	/* Some components that needs attention from more than the constructor */
-	private static JPanel contentPane;
-	private static JTextArea mainText; /* For the print */
-	private static JTextField pathTextField;
-	private static JList fileList;
-	private static JTextField personsText;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+	
 	public int personsWorking = 5;
 	
+	/* Some components that needs attention from more than the constructor */
+	private JPanel contentPane;
+	private JTextArea mainText; /* For the print */
+	private JTextField pathTextField;
+	private JList fileList;
+	private JTextField personsText;
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                               GUI                                 *
@@ -70,11 +69,14 @@ public class MainFrame extends JFrame {
 		
 		/* The main view where the result is showed among other things. */
 		JPanel mainTab = new JPanel();
+		mainTab.setLayout(null);
 		tabbedPane.addTab("Box handling", null, mainTab, "Tjena.");
 		
 		/* MAIN Text area for showing results. */
-		mainTab.setLayout(null);
 		mainText = new JTextArea();
+		DefaultCaret caret = (DefaultCaret)mainText.getCaret(); /* Makes it scroll down */
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);		/* when appending.      */
+		
 		JScrollPane mainScroll = new JScrollPane(mainText);
 		mainScroll.setLocation(MARGIN, MARGIN);
 		mainScroll.setSize(tabbedPane.getWidth() - MARGIN * 6, tabbedPane.getHeight() - 200);
@@ -218,9 +220,8 @@ public class MainFrame extends JFrame {
 	private void runAlgorithm1() {
 		(new Thread() {
 			public void run() {
-				AlgorithmPart1 alg = new AlgorithmPart1();
-				appendScrolled("Runs algorithm part 1 on boxconfig: " + FILENAME);
-				mainText.setCaretPosition(mainText.getDocument().getLength());
+				AlgorithmPart1 alg = new AlgorithmPart1(mainText);
+				mainText.append("Runs algorithm part 1 on boxconfig: " + FILENAME + "\n");
 				alg.start(new BoxConfiguration(PATH + FILENAME));
 				long t1 = System.nanoTime();
 				while (alg.isRunning()) {
@@ -232,7 +233,7 @@ public class MainFrame extends JFrame {
 				}
 				long t2 = System.nanoTime();
 				long timeForExecutionInMs = (t2 - t1) / 1000000;
-				appendScrolled("Time for execution: " + timeForExecutionInMs+"ms");
+				mainText.append("Time for execution: " + timeForExecutionInMs+"ms\n");
 			}
 		}).start();
 	}
@@ -246,12 +247,12 @@ public class MainFrame extends JFrame {
 			public void run() {
 				BoxConfiguration boxconfig = new BoxConfiguration(PATH + FILENAME);
 				if (!boxconfig.canBeSolved(personsWorking)) {
-					appendScrolled("Too few workers to run algorithm 2." +
-							"Try a few more.");
+					mainText.append("Too few workers to run algorithm 2." +
+							"Try a few more.\n");
 					return;
 				}
-				AlgorithmPart2 alg = new AlgorithmPart2();
-				appendScrolled("Runs algorithm part 2 on boxconfig: " + FILENAME);
+				AlgorithmPart2 alg = new AlgorithmPart2(mainText);
+				mainText.append("Runs algorithm part 2 on boxconfig: " + FILENAME + "\n");
 				alg.start(boxconfig, personsWorking);
 				long t1 = System.nanoTime();
 				while (alg.isRunning()) {
@@ -263,20 +264,9 @@ public class MainFrame extends JFrame {
 				}
 				long t2 = System.nanoTime();
 				long timeForExecutionInMs = (t2 - t1) / 1000000;
-				appendScrolled("Time for execution: " + timeForExecutionInMs + "ms");
+				mainText.append("Time for execution: " + timeForExecutionInMs + "ms\n");
 			}
 		}).start();
 	}
-
-	/**
-	 * Appends a string as well as a new line, and scrolls to the bottom of
-	 * the textarea.
-	 * @param str The string to be printed.
-	 */
-	public static void appendScrolled(String str) {
-		mainText.append(str + "\n");
-		mainText.setCaretPosition(mainText.getDocument().getLength());
-	}
-	
 	
 } // Class

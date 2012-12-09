@@ -36,7 +36,7 @@ public class AlgorithmPart2 {
 	 * Default constructor.
 	 * @param mainText The area where text output should be put.
 	 */
-	public AlgorithmPart2() {
+	public AlgorithmPart2(JTextArea mainText) {
 		this.mainText = mainText;
 	}
 	
@@ -69,8 +69,6 @@ public class AlgorithmPart2 {
 		    				personsFree -=  box.getWeight();
 		    			}
 		    		}
-//		    		mainText.append(personsMax - personsFree + " st personer flyttar boxarna ");
-//		    		MainFrame.appendScrolled(personsMax - personsFree + " st personer flyttar boxarna "); // TEMP STATIC FUNCTION
 		    		String tempString = personsMax - personsFree + " st personer flyttar boxarna ";
 		    		for (Box box : boxesToMove) {
 		    			boxconfig.remove(box);
@@ -80,7 +78,7 @@ public class AlgorithmPart2 {
 		    			}
 		    		}
 		    		boxesToMove.clear();
-		    		MainFrame.appendScrolled(tempString); // Writes to output textarea
+		    		mainText.append(tempString + "\n");
 		    		try {
 						Thread.sleep(AlgorithmPart1.TIMEINMS);
 					} catch (InterruptedException e) {
@@ -91,7 +89,6 @@ public class AlgorithmPart2 {
 		    			break;
 		    		}
 		    	}
-		    	
 		    }
 		}).start();		
 	}
