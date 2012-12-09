@@ -18,7 +18,7 @@ public class AlgorithmPart1 {
 	 *                        Class variables                            *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
-	public static int TIMEINMS = 1000;
+	public static int TIMEINMS = 100;
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
@@ -27,6 +27,7 @@ public class AlgorithmPart1 {
 	private String name;
 	private JTextArea mainText;
 	private BoxConfiguration boxconfig;
+	private boolean isRunning = true;
 	
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -36,62 +37,50 @@ public class AlgorithmPart1 {
 	/**
 	 * Default constructor
 	 */
-	public AlgorithmPart1(JTextArea mainText) {
+	public AlgorithmPart1() {
 		this.name = "Easy Algorithm";
 		this.mainText = mainText;
 	}
 	
 	/**
-	 * Starts the sorting of boxes.
+	 * Starts the sorting of boxes. Doesn't care about the weight of the box.
+	 * @param boxconfig The box configuration to sort.
 	 */
-	public void start(BoxConfiguration boxconfigs) {
-		this.boxconfig = boxconfigs;
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					move(boxconfig);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public void start(BoxConfiguration boxconfig) {
+		this.boxconfig = boxconfig;
+		this.move();
 	}
 	
 	/**
 	 * Really bad and slow removing algorithm.
 	 * @param boxes
 	 */
-	private void move(BoxConfiguration boxconfigs) {
-
-		(new Thread()
-		{
+	private void move() {
+		(new Thread() {
 		    public void run() {
-		    	boolean done = false;
-		    	while(!done) {
+		    	isRunning = true;
+		    	while(isRunning) {
 					for (Box box : boxconfig.boxes) {
 						if (box.isTopBox()) {
 							boxconfig.remove(box);
-							boxconfig.boxes.remove(box);
-//							System.out.println("Box " + box.getName() + " was removed successfully.");
-							mainText.append("Box " + box.getName() + " was removed.\n");
+							MainFrame.appendScrolled("Box " + box.getName() + " was removed.");
 							break;
 						}
 					}
 					try { 
-						Thread.sleep(TIMEINMS / 10);
+						Thread.sleep(TIMEINMS);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (boxconfig.boxes.size() == 0) { // Exit criteria
-						done = true;
+						isRunning = false;
 					}
 				}
 		    }
-		}).start();
-		
-		
-		
+		}).start();		
 	}
 
+	public boolean isRunning() {
+		return isRunning;
+	}
 }

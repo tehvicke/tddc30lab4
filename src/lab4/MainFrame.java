@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -30,15 +31,21 @@ public class MainFrame extends JFrame {
 	public static String PROGRAMNAME = "LŒdor & co";
 	public static int MARGIN = 6; //Margin for all the components
 	public static String FILENAME;
+	
+	/* Some components that needs attention from more than the constructor */
+	private static JPanel contentPane;
+	private static JTextArea mainText; /* For the print */
+	private static JTextField pathTextField;
+	private static JList fileList;
+	private static JTextField personsText;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
-	private JPanel contentPane;
-	JTextArea mainText; /* For the print */
-	JList fileList;
 
+	public int personsWorking = 5;
+	
+	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                               GUI                                 *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -68,7 +75,6 @@ public class MainFrame extends JFrame {
 		/* MAIN Text area for showing results. */
 		mainTab.setLayout(null);
 		mainText = new JTextArea();
-		mainText.setEditable(false);
 		JScrollPane mainScroll = new JScrollPane(mainText);
 		mainScroll.setLocation(MARGIN, MARGIN);
 		mainScroll.setSize(tabbedPane.getWidth() - MARGIN * 6, tabbedPane.getHeight() - 200);
@@ -86,9 +92,18 @@ public class MainFrame extends JFrame {
 		pathLabel.setAlignmentX(LEFT_ALIGNMENT);
 		settingsTab.add(pathLabel);
 		
-		JTextField pathTextField = new JTextField(PATH);
+		pathTextField = new JTextField(PATH);
 		pathTextField.setSize(tabbedPane.getWidth() - 240 , 24);
 		pathTextField.setLocation(pathLabel.getWidth() + MARGIN, MARGIN);
+		pathTextField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				PATH = pathTextField.getText();
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
 		settingsTab.add(pathTextField);
 		
 		/* JPane with title */
@@ -109,14 +124,29 @@ public class MainFrame extends JFrame {
 		algorithm1.setBounds(MARGIN , MARGIN * 3, 160, 30);
 		choicePane.add(algorithm1);
 		
-		/* Choose file */
-		File[] files = finder(this.PATH);
+		/* Button algorithm part 2 */
+		JButton algorithm2 = new JButton("Algorithm part 2.");
+		algorithm2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				runAlgorithm2();
+			}
+		});
+		algorithm2.setBounds(MARGIN, MARGIN * 7, 160, 30);
+		choicePane.add(algorithm2);
+		
+		/* File choosing panel */
+		File[] files = finder(PATH);
 		String[] fileNames = new String[files.length];
 		int count = 0;
 		for (File file : files) {
 			fileNames[count++] = file.getName();
 		}
 		fileList = new JList(fileNames);
+		if (fileNames.length > 0) { /* Selects the first value for avoiding null */
+			fileList.setSelectedIndex(0);
+			FILENAME = (String) fileList.getSelectedValue();
+		}
 		fileList.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
@@ -124,12 +154,27 @@ public class MainFrame extends JFrame {
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
-				System.out.println("Focus gained!!");
 			}
 		});
 		JScrollPane fileListScroll = new JScrollPane(fileList);
 		fileListScroll.setBounds(480, MARGIN * 3, 115, 60);
 		choicePane.add(fileListScroll);
+		
+		
+		/* Textfield to choose number of persons working */
+		personsText = new JTextField(Integer.toString(personsWorking));
+		personsText.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				personsWorking = Integer.parseInt(personsText.getText());
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+			}
+		});
+		personsText.setBounds(MARGIN * 2 + 160, MARGIN * 7, 40, 30);
+		choicePane.add(personsText);
+		
 	}
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -158,7 +203,7 @@ public class MainFrame extends JFrame {
 	 * @param dirName Absolute path to directory.
 	 * @return
 	 */
-	private File[] finder(String dirName){
+	private File[] finder(String dirName) {
     	File dir = new File(dirName);
     	return dir.listFiles(new FilenameFilter() { 
     	         public boolean accept(File dir, String filename) { 
@@ -167,10 +212,71 @@ public class MainFrame extends JFrame {
     	} );
     }
 	
+	/**
+	 * Runs the algorithm from part 1. The bad one.
+	 */
 	private void runAlgorithm1() {
-		AlgorithmPart1 alg = new AlgorithmPart1(mainText);
-		mainText.setText("Runs algorithm part 1 on boxconfig: "+FILENAME + "\n");
-		BoxConfiguration boxconfig = new BoxConfiguration(PATH + FILENAME);
-		alg.start(boxconfig);
+		(new Thread() {
+			public void run() {
+				AlgorithmPart1 alg = new AlgorithmPart1();
+				appendScrolled("Runs algorithm part 1 on boxconfig: " + FILENAME);
+				mainText.setCaretPosition(mainText.getDocument().getLength());
+				alg.start(new BoxConfiguration(PATH + FILENAME));
+				long t1 = System.nanoTime();
+				while (alg.isRunning()) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				long t2 = System.nanoTime();
+				long timeForExecutionInMs = (t2 - t1) / 1000000;
+				appendScrolled("Time for execution: " + timeForExecutionInMs+"ms");
+			}
+		}).start();
 	}
-}
+	
+	
+	/**
+	 * Run the second algoritm. The time efficient.
+	 */
+	private void runAlgorithm2() {
+		(new Thread() {
+			public void run() {
+				BoxConfiguration boxconfig = new BoxConfiguration(PATH + FILENAME);
+				if (!boxconfig.canBeSolved(personsWorking)) {
+					appendScrolled("Too few workers to run algorithm 2." +
+							"Try a few more.");
+					return;
+				}
+				AlgorithmPart2 alg = new AlgorithmPart2();
+				appendScrolled("Runs algorithm part 2 on boxconfig: " + FILENAME);
+				alg.start(boxconfig, personsWorking);
+				long t1 = System.nanoTime();
+				while (alg.isRunning()) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				long t2 = System.nanoTime();
+				long timeForExecutionInMs = (t2 - t1) / 1000000;
+				appendScrolled("Time for execution: " + timeForExecutionInMs + "ms");
+			}
+		}).start();
+	}
+
+	/**
+	 * Appends a string as well as a new line, and scrolls to the bottom of
+	 * the textarea.
+	 * @param str The string to be printed.
+	 */
+	public static void appendScrolled(String str) {
+		mainText.append(str + "\n");
+		mainText.setCaretPosition(mainText.getDocument().getLength());
+	}
+	
+	
+} // Class

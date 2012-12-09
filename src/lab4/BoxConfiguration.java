@@ -22,6 +22,7 @@ public class BoxConfiguration {
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
 	public ArrayList<Box> boxes; // Should probably be temporary as another representation is better/faster.
+	private int minPersons = 0;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
@@ -42,6 +43,11 @@ public class BoxConfiguration {
 	public BoxConfiguration(String filename) {
 		boxes = new ArrayList<Box>();
 		this.createFromFile(filename);
+		for (Box box : boxes) {
+			if (minPersons < box.getWeight()) {
+				minPersons = box.getWeight();
+			}
+		}
 	}
 	
 	/**
@@ -72,7 +78,7 @@ public class BoxConfiguration {
 	}
 	
 	/**
-	 * Textual presentation of all boxes.
+	 * Textual presentation of all boxes in sysout.
 	 */
 	public void presentation() {
 		for (Box box : this.boxes) {
@@ -82,32 +88,50 @@ public class BoxConfiguration {
 	
 	/**
 	 * Removes a box from the list if it's a top box.
-	 * @param box
+	 * @param box The box to remove from the list.
 	 */
 	public void remove(Box box) {
 		if (box.isTopBox()) {
-			box.destroy();
-			boxes.remove(box);
+			box.destroy(); /* Removes all connections to and from the box */
+			boxes.remove(box); /* Removes box from the list */ 
 			return;
 		} 
 		System.err.println("Box " + box.getName() + " is not on the top.");
 	}
 	
+	/**
+	 * Returns whether the box configuration can be solved with the number of
+	 * workers.
+	 * @param pers The number of workers to test with.
+	 * @return True if possible.
+	 */
+	public boolean canBeSolved(int pers) {
+		if (pers >= minPersons) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * Creates the box config by reading a file.
+	 * @param filename The file to be read. Absolute path.
+	 */
 	private void createFromFile(String filename) {
 		/* Reads the file */
 		try {
 			FileInputStream fstream = new FileInputStream(filename);
-			// Get the object of DataInputStream
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine;
 			
-			int noOfBoxes = Integer.parseInt(br.readLine());
+			String strLine;
+			int noOfBoxes = Integer.parseInt(br.readLine()); /* The number of boxes */
 			for (int i = 0; i < noOfBoxes; i++) {
 				strLine = br.readLine();
 				this.addBox(new Box(strLine.split(" ")[0], Integer.parseInt(strLine.split(" ")[1])));
 			}
 			
+			/* The second integer which is the number of connections */
 			int noOfConnections = Integer.parseInt(br.readLine());
 			for (int i = 0; i < noOfConnections; i++) {
 				strLine = br.readLine();
