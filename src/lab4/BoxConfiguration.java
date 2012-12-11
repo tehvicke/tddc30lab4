@@ -155,4 +155,12 @@ public class BoxConfiguration {
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
+	
+	/**
+	 * 
+	 * @return int Minimum number of persons to solve the boxConfig.
+	 */
+	public int getMinPersons() {
+		return minPersons;
+	}	
 }
