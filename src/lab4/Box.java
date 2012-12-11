@@ -18,13 +18,25 @@ public class Box {
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
-	/* Basic info about the box */
+	/**
+	 * The name of the box.
+	 */
 	private String name;
+	
+	/**
+	 * The weight of the box.
+	 */
 	private int weight;
 	
-	/* The boxes above and under */
-	public ArrayList<Box> boxesAbove; // This is not really necessary for this task.
-	public ArrayList<Box> boxesUnder;
+	/**
+	 * The boxes above the list.
+	 */
+	private ArrayList<Box> boxesAbove;
+	
+	/**
+	 * The boxes under the box.
+	 */
+	private ArrayList<Box> boxesUnder;
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
