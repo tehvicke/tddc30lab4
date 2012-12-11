@@ -33,10 +33,9 @@ public class MainFrame extends JFrame {
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
 	/**
-	 * Absolute path to where the files are stored.
+	 * Absolute or relative path to where the files are stored.
 	 */
-	public static String PATH = 
-			"/Users/viktordahl/Dropbox/Skola/Programmering/Java/eclipse/tddc30lab4/src/lab4/";
+	public static String PATH = "src/lab4/";
 	
 	/**
 	 * The filename of the file to open. Is used both for the boxconfig
