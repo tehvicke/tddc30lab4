@@ -80,6 +80,10 @@ public class AlgorithmPart1 {
 		}).start();		
 	}
 
+	/**
+	 * 
+	 * @return True if it's currently running
+	 */
 	public boolean isRunning() {
 		return isRunning;
 	}

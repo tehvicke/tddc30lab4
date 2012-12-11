@@ -161,16 +161,18 @@ public class MainFrame extends JFrame {
 		
 		mainScroll = new JScrollPane(mainText);
 		mainScroll.setLocation(MARGIN, MARGIN);
-		mainScroll.setSize(tabbedPane.getWidth() - MARGIN * 6, tabbedPane.getHeight() - 200);
+		mainScroll.setSize(
+				tabbedPane.getWidth() - MARGIN * 6, 
+				tabbedPane.getHeight() - 200);
 		mainScroll.setFocusable(false);
 		mainTab.add(mainScroll);
 		
 		/* The settings view. */
 		settingsTab = new JPanel();
+		settingsTab.setLayout(null);
 		tabbedPane.addTab("Global settings", null, settingsTab, "");
 		
 		/* SETTINGS The text field for path. */
-		settingsTab.setLayout(null);
 		JLabel pathLabel = new JLabel("Path to the text files :");
 		pathLabel.setLocation(MARGIN, MARGIN);
 		pathLabel.setSize(136, 16);
@@ -183,7 +185,14 @@ public class MainFrame extends JFrame {
 		pathTextField.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				PATH = pathTextField.getText();
+				if (!PATH.equals(pathTextField.getText())) {
+//					PATH = pathTextField.getText();
+//					mainText.append("Path updated to : " + PATH + "\n");
+					try {
+						fileList = setFiles();
+					} catch (NullPointerException e) {
+					}
+				}
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -232,17 +241,7 @@ public class MainFrame extends JFrame {
 		choicePane.add(algorithm2);
 		
 		/* File choosing panel */
-		File[] files = finder(PATH);
-		String[] fileNames = new String[files.length];
-		int count = 0;
-		for (File file : files) {
-			fileNames[count++] = file.getName();
-		}
-		fileList = new JList(fileNames);
-		if (fileNames.length > 0) { /* Selects the first value for avoiding null */
-			fileList.setSelectedIndex(0);
-			FILENAME = (String) fileList.getSelectedValue();
-		}
+		fileList = setFiles();
 		fileList.addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
@@ -317,6 +316,21 @@ public class MainFrame extends JFrame {
     	        	 }
     	} );
     }
+	
+	private JList setFiles() {
+		File[] files = finder(PATH);
+		String[] fileNames = new String[files.length];
+		int count = 0;
+		for (File file : files) {
+			fileNames[count++] = file.getName();
+		}
+		JList fileListLocal = new JList(fileNames);
+		if (fileNames.length > 0) { /* Selects the first value for avoiding null */
+			fileListLocal.setSelectedIndex(0);
+			FILENAME = (String) fileListLocal.getSelectedValue();
+		}
+		return fileListLocal;
+	}
 	
 	/**
 	 * Runs the algorithm from part 1. The bad one.

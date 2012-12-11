@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import javax.swing.JTextArea;
 
 /**
- * 
+ * An algorithm for the second part. Takes number of workers and adapts
+ * the boxing to that. 
  * @author Viktor, Petter
  *
  */
@@ -94,10 +95,30 @@ public class AlgorithmPart2 {
 	}
 
 	/**
-	 *
 	 * @return True if it's currently running.
 	 */
 	public boolean isRunning() {
 		return isRunning;
 	}
+	
+	
+	/**
+	 * IS NOT USED NOR DONE.
+	 */
+	private void moveImproved() {
+		(new Thread() {
+		    public void run() {
+		    	/* Find fastest way */
+		    	isRunning = true;
+		    	boolean done = false;
+		    	while(isRunning) { // REAL ALGORITHM
+		    		if (boxconfig.boxes.size() == 0) {
+		    			isRunning = false;
+		    			break;
+		    		}
+		    	}
+		    }
+		}).start();
+	}
+	
 }
