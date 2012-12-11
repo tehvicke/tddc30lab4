@@ -6,8 +6,10 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import javax.swing.JTextArea;
+
 /**
- * A class for a box configuration. Could be a matrix.
+ * A class for a box configuration.
  * @author Viktor, Petter
  *
  */
@@ -21,20 +23,20 @@ public class BoxConfiguration {
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
-	public ArrayList<Box> boxes; // Should probably be temporary as another representation is better/faster.
+	/** 
+	 * An array for all the boxes in the box configuration.
+	 * Is protected for allowing the algorithms to reach it.
+	 */
+	protected ArrayList<Box> boxes;
+		
+	/** 
+	 * The minimum number of persons required to finish the box config.
+	 */
 	private int minPersons = 0;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
-	/**
-	 * Default constructor.
-	 * TODO: Define what this should do.
-	 */
-	public BoxConfiguration() {
-		boxes = new ArrayList<Box>();
-	}
 	
 	/**
 	 * Constructor with a filename.
@@ -87,13 +89,23 @@ public class BoxConfiguration {
 	}
 	
 	/**
+	 * Presentation of the box config in the text area.
+	 * @param mainText The text area where the text is to be printed.
+	 */
+	public void presentation(JTextArea mainText) {
+		for (Box box : this.boxes) {
+			mainText.append(box.getNeighbors());
+		}
+	}
+	
+	/**
 	 * Removes a box from the list if it's a top box.
 	 * @param box The box to remove from the list.
 	 */
 	public void remove(Box box) {
 		if (box.isTopBox()) {
 			box.destroy(); /* Removes all connections to and from the box */
-			boxes.remove(box); /* Removes box from the list */ 
+			boxes.remove(box); /* Removes box from the list */
 			return;
 		} 
 		System.err.println("Box " + box.getName() + " is not on the top.");
