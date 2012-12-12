@@ -52,6 +52,23 @@ public class BoxConfiguration {
 		}
 	}
 	
+	
+	/**
+	 * Constructor for creating a box config from a set of already chosen boxes.
+	 * @param boxes The list of boxes to use when creating the box config.
+	 */
+	public BoxConfiguration(ArrayList<Box> boxes2) {
+		this.boxes = new ArrayList<Box>();
+		for (Box box : boxes2) {
+			this.boxes.add(box);
+		}
+		for (Box box : this.boxes) {
+			if (minPersons < box.getWeight()) {
+				minPersons = box.getWeight();
+			}
+		}
+	}
+	
 	/**
 	 * Adds the box to an arrayList and creates the box object.
 	 * @param box

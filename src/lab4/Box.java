@@ -157,5 +157,16 @@ public class Box {
 		}
 		return response + "\n";
 	}
+	
+	/**
+	 * Calculates the depth recursively
+	 * @return The depth of the box.
+	 */
+	public int getDepth() {
+		if (boxesUnder.isEmpty()) {
+			return 0; // Might be 1
+		}
+		return getDepth() + 1;
+	}
 }
 

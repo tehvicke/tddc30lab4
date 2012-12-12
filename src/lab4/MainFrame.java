@@ -240,6 +240,18 @@ public class MainFrame extends JFrame {
 		algorithm2.setBounds(MARGIN, MARGIN * 7, 160, 30);
 		choicePane.add(algorithm2);
 		
+		/* Button algorithm part 2 */
+		JButton algorithm3 = new JButton("Algorithm part 3.");
+		algorithm3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				runAlgorithm3();
+			}
+		});
+		algorithm3.setBounds(MARGIN, MARGIN * 13, 160, 30);
+		choicePane.add(algorithm3);
+		
+		
 		/* File choosing panel */
 		fileList = setFiles();
 		fileList.addFocusListener(new FocusListener() {
@@ -317,6 +329,10 @@ public class MainFrame extends JFrame {
     	} );
     }
 	
+	/**
+	 * Creates a JList with the names of all box config files.
+	 * @return A JList with the boxconfig names.
+	 */
 	private JList setFiles() {
 		File[] files = finder(PATH);
 		String[] fileNames = new String[files.length];
@@ -379,6 +395,34 @@ public class MainFrame extends JFrame {
 				AlgorithmPart2 alg = new AlgorithmPart2(mainText);
 				mainText.append("Runs algorithm part 2 on boxconfig: " + FILENAME + "\n");
 				alg.start(boxConfig, personsWorking);
+				long t1 = System.nanoTime();
+				while (alg.isRunning()) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				long t2 = System.nanoTime();
+				long timeForExecutionInMs = (t2 - t1) / 1000000;
+				mainText.append("Time for execution: " + timeForExecutionInMs + "ms\nBoxconfig " + FILENAME + " is empty.\n");
+			}
+		}).start();
+	}
+	
+	/**
+	 * Run the third algoritm. The smart one.
+	 */
+	private void runAlgorithm3() {
+		(new Thread() {
+			public void run() {
+				if (imageIsShown) {
+					imageFrame.setVisible(false);
+					mainScroll.setVisible(true);
+				}
+				Alg3 alg = new Alg3(mainText);
+				mainText.append("Runs algorithm part 3 on boxconfig: " + FILENAME + "\n");
+				alg.start(boxConfig);
 				long t1 = System.nanoTime();
 				while (alg.isRunning()) {
 					try {

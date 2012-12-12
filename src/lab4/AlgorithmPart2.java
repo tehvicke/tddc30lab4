@@ -27,6 +27,8 @@ public class AlgorithmPart2 {
 	private BoxConfiguration boxconfig;
 	private boolean isRunning = true;
 	private JTextArea mainText;
+	private int stepsToSolve;
+	private boolean silent = false;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
@@ -60,6 +62,7 @@ public class AlgorithmPart2 {
 		(new Thread() {
 		    public void run() {
 		    	isRunning = true;
+		    	stepsToSolve = 0;
 		    	ArrayList<Box> boxesToMove = new ArrayList<Box>();
 		    	int personsFree;
 		    	while(isRunning) { /* One of this loop is one "round" */
@@ -70,6 +73,7 @@ public class AlgorithmPart2 {
 		    				personsFree -=  box.getWeight();
 		    			}
 		    		}
+		    		stepsToSolve++; /* Counts the number of steps to solve the algorithm */
 		    		String tempString = personsMax - personsFree + " st personer flyttar boxarna ";
 		    		for (Box box : boxesToMove) {
 		    			boxconfig.remove(box);
@@ -79,7 +83,10 @@ public class AlgorithmPart2 {
 		    			}
 		    		}
 		    		boxesToMove.clear();
-		    		mainText.append(tempString + "\n");
+		    		
+		    		if (!silent) {
+		    			mainText.append(tempString + "\n");
+		    		}
 		    		try {
 						Thread.sleep(AlgorithmPart1.TIMEINMS);
 					} catch (InterruptedException e) {
@@ -90,6 +97,7 @@ public class AlgorithmPart2 {
 		    			break;
 		    		}
 		    	}
+		    	System.out.println(stepsToSolve);
 		    }
 		}).start();		
 	}
@@ -101,24 +109,25 @@ public class AlgorithmPart2 {
 		return isRunning;
 	}
 	
-	
 	/**
-	 * IS NOT USED NOR DONE.
+	 * 
+	 * @return The steps to solve the current algorithm.
 	 */
-	private void moveImproved() {
-		(new Thread() {
-		    public void run() {
-		    	/* Find fastest way */
-		    	isRunning = true;
-		    	boolean done = false;
-		    	while(isRunning) { // REAL ALGORITHM
-		    		if (boxconfig.boxes.size() == 0) {
-		    			isRunning = false;
-		    			break;
-		    		}
-		    	}
-		    }
-		}).start();
+	public int getSteps() {
+		return this.stepsToSolve;
 	}
 	
+	/**
+	 * Sets the alg in silent mode, i.e. doesn't print in mainText.
+	 */
+	public void setSilent() {
+		this.silent = true;
+	}
+	
+	/**
+	 * Sets silent mode to off, i.e. prints in mainText.
+	 */
+	public void setUnsilent() {
+		this.silent = false;
+	}
 }
