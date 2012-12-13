@@ -1,7 +1,6 @@
 package lab4;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * The box class.
@@ -135,8 +134,8 @@ public class Box {
 	 * @return A string with the neighboring boxes (up and down).
 	 */
 	public String getNeighbors() {
-		String response = this.getName() + ": ";
-		if (boxesAbove.size() > 0) {
+		String response = this.getName() + " " + getWeight() + ": ";
+		if (boxesAbove.size() > 0) { /* Adds the boxes on top */
 			String boxAb = "";
 			for (Box box : this.boxesAbove) {
 				boxAb += box.getName() + ", ";
@@ -146,7 +145,7 @@ public class Box {
 			response += "Is a top box! ";
 		}
 		
-		if (boxesUnder.size() > 0) {
+		if (boxesUnder.size() > 0) { /* Adds the boxes under */
 			String boxUn = "";
 			for (Box box : this.boxesUnder) {
 				boxUn += box.getName() + ", ";
@@ -159,7 +158,7 @@ public class Box {
 	}
 	
 	/**
-	 * Calculates the depth recursively
+	 * Calculates the depth recursively. Is not used in any current algorithm.
 	 * @return The depth of the box.
 	 */
 	public int getDepth() {
@@ -167,6 +166,20 @@ public class Box {
 			return 0; // Might be 1
 		}
 		return getDepth() + 1;
+	}
+	
+	/**
+	 * @return The boxes above.
+	 */
+	public ArrayList<Box> getBoxesAbove() {
+		return this.boxesAbove;
+	}
+	
+	/**
+	 * @return The boxes above.
+	 */
+	public ArrayList<Box> getBoxesUnder() {
+		return this.boxesUnder;
 	}
 }
 

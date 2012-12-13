@@ -33,6 +33,13 @@ public class BoxConfiguration {
 	 * The minimum number of persons required to finish the box config.
 	 */
 	private int minPersons = 0;
+	
+	/**
+	 * A boolean for telling the createFromFile-function that it should
+	 * only load the connections between the boxes but not the actual boxes
+	 * themselves.
+	 */
+	private boolean onlyConnections;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
@@ -40,12 +47,13 @@ public class BoxConfiguration {
 	
 	/**
 	 * Constructor with a filename.
-	 * @param filename Absolute path of the file to be read.
+	 * @param filename Absolute or relative path of the file to be read.
 	 */
 	public BoxConfiguration(String filename) {
 		boxes = new ArrayList<Box>();
+		onlyConnections = false;
 		this.createFromFile(filename);
-		for (Box box : boxes) {
+		for (Box box : boxes) { /* Calculate min persons to solve */
 			if (minPersons < box.getWeight()) {
 				minPersons = box.getWeight();
 			}
@@ -61,17 +69,16 @@ public class BoxConfiguration {
 		this.boxes = new ArrayList<Box>();
 		for (Box box : boxes2) {
 			this.boxes.add(box);
-		}
-		for (Box box : this.boxes) {
-			if (minPersons < box.getWeight()) {
+			if (minPersons < box.getWeight()) { /* Calculate min persons to solve */
 				minPersons = box.getWeight();
 			}
 		}
+		onlyConnections = true;
 	}
 	
 	/**
 	 * Adds the box to an arrayList and creates the box object.
-	 * @param box
+	 * @param box The box to add.
 	 */
 	public void addBox(Box box) {
 		this.boxes.add(box);
@@ -80,8 +87,8 @@ public class BoxConfiguration {
 	
 	/**
 	 * Adds the connections between two boxes.
-	 * @param nameBox1 Name of the upper box
-	 * @param nameBox2 Name of the lower box
+	 * @param nameBox1 Name of the upper box.
+	 * @param nameBox2 Name of the lower box.
 	 */
 	public void addConnection(String nameBox1, String nameBox2) {
 		for (Box box1 : this.boxes) {
@@ -157,7 +164,9 @@ public class BoxConfiguration {
 			int noOfBoxes = Integer.parseInt(br.readLine()); /* The number of boxes */
 			for (int i = 0; i < noOfBoxes; i++) {
 				strLine = br.readLine();
-				this.addBox(new Box(strLine.split(" ")[0], Integer.parseInt(strLine.split(" ")[1])));
+				if (!onlyConnections) {
+					this.addBox(new Box(strLine.split(" ")[0], Integer.parseInt(strLine.split(" ")[1])));
+				}
 			}
 			
 			/* The second integer which is the number of connections */
@@ -167,17 +176,21 @@ public class BoxConfiguration {
 				this.addConnection(strLine.split(" ")[0], strLine.split(" ")[1]);				
 			}
 			in.close();
-			
+				
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
 	
 	/**
-	 * 
-	 * @return int Minimum number of persons to solve the boxConfig.
+	 * @return int Minimum number of required persons to solve the boxConfig.
 	 */
 	public int getMinPersons() {
 		return minPersons;
-	}	
+	}
+	
+	public void loadConnections() {
+		onlyConnections = true;
+		createFromFile(MainFrame.PATH + MainFrame.FILENAME);
+	}
 }

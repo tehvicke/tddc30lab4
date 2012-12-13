@@ -22,7 +22,7 @@ public class AlgorithmPart2 {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	private int personsMax; // The number of persons 
 	private BoxConfiguration boxconfig;
 	private boolean isRunning = true;
@@ -33,8 +33,8 @@ public class AlgorithmPart2 {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
-	
+
+
 	/**
 	 * Default constructor.
 	 * @param mainText The area where text output should be put.
@@ -42,7 +42,7 @@ public class AlgorithmPart2 {
 	public AlgorithmPart2(JTextArea mainText) {
 		this.mainText = mainText;
 	}
-	
+
 	/**
 	 * Starts the algorithm.
 	 * @param boxconfig The box config to work with.
@@ -54,52 +54,46 @@ public class AlgorithmPart2 {
 		this.boxconfig = boxconfig;
 		this.move();
 	}
-	
+
 	/**
 	 * The actual "moving"-algorithm.
 	 */
 	private void move() {
-		(new Thread() {
-		    public void run() {
-		    	isRunning = true;
-		    	stepsToSolve = 0;
-		    	ArrayList<Box> boxesToMove = new ArrayList<Box>();
-		    	int personsFree;
-		    	while(isRunning) { /* One of this loop is one "round" */
-		    		personsFree = personsMax; /* Resents the number of free persons */
-		    		for (Box box : boxconfig.boxes) {
-		    			if (box.isTopBox() && box.getWeight() <= personsFree) {
-		    				boxesToMove.add(box);
-		    				personsFree -=  box.getWeight();
-		    			}
-		    		}
-		    		stepsToSolve++; /* Counts the number of steps to solve the algorithm */
-		    		String tempString = personsMax - personsFree + " st personer flyttar boxarna ";
-		    		for (Box box : boxesToMove) {
-		    			boxconfig.remove(box);
-		    			tempString += box.getName();
-		    			if (boxesToMove.indexOf(box) != boxesToMove.size() - 1) {
-		    				tempString += ", ";
-		    			}
-		    		}
-		    		boxesToMove.clear();
-		    		
-		    		if (!silent) {
-		    			mainText.append(tempString + "\n");
-		    		}
-		    		try {
-						Thread.sleep(AlgorithmPart1.TIMEINMS);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-		    		if (boxconfig.boxes.size() == 0) {
-		    			isRunning = false;
-		    			break;
-		    		}
-		    	}
-		    	System.out.println(stepsToSolve);
-		    }
-		}).start();		
+		isRunning = true;
+		stepsToSolve = 0;
+		ArrayList<Box> boxesToMove = new ArrayList<Box>();
+		int personsFree;
+		while(boxconfig.boxes.size() > 0) { /* One of this loop is one "round"    */
+			personsFree = personsMax;       /* Resets the number of free persons */
+			for (Box box : boxconfig.boxes) {
+				if (box.isTopBox() && box.getWeight() <= personsFree) {
+					boxesToMove.add(box);
+					personsFree -=  box.getWeight();
+				}
+			}
+			stepsToSolve++; /* Counts the number of steps to solve the algorithm */
+			String tempString = personsMax - personsFree + " st personer flyttar boxarna ";
+			for (Box box : boxesToMove) {
+				boxconfig.remove(box);
+				tempString += box.getName();
+				if (boxesToMove.indexOf(box) != boxesToMove.size() - 1) {
+					tempString += ", ";
+				}
+			}
+			boxesToMove.clear();
+
+			if (!silent) { /* Shall print out it one by one */
+				mainText.append(tempString + "\n");
+
+				try {
+					Thread.sleep(AlgorithmPart1.TIMEINMS);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+
+				}
+			}
+		}
+		isRunning = false;	
 	}
 
 	/**
@@ -108,7 +102,7 @@ public class AlgorithmPart2 {
 	public boolean isRunning() {
 		return isRunning;
 	}
-	
+
 	/**
 	 * 
 	 * @return The steps to solve the current algorithm.
@@ -116,14 +110,14 @@ public class AlgorithmPart2 {
 	public int getSteps() {
 		return this.stepsToSolve;
 	}
-	
+
 	/**
 	 * Sets the alg in silent mode, i.e. doesn't print in mainText.
 	 */
 	public void setSilent() {
 		this.silent = true;
 	}
-	
+
 	/**
 	 * Sets silent mode to off, i.e. prints in mainText.
 	 */
