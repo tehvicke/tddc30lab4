@@ -22,18 +22,18 @@ public class BoxConfiguration {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	/** 
 	 * An array for all the boxes in the box configuration.
 	 * Is protected for allowing the algorithms to reach it.
 	 */
 	protected ArrayList<Box> boxes;
-		
+
 	/** 
 	 * The minimum number of persons required to finish the box config.
 	 */
 	private int minPersons = 0;
-	
+
 	/**
 	 * A boolean for telling the createFromFile-function that it should
 	 * only load the connections between the boxes but not the actual boxes
@@ -44,7 +44,7 @@ public class BoxConfiguration {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	/**
 	 * Constructor with a filename.
 	 * @param filename Absolute or relative path of the file to be read.
@@ -59,8 +59,7 @@ public class BoxConfiguration {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Constructor for creating a box config from a set of already chosen boxes.
 	 * @param boxes The list of boxes to use when creating the box config.
@@ -75,7 +74,7 @@ public class BoxConfiguration {
 		}
 		onlyConnections = true;
 	}
-	
+
 	/**
 	 * Adds the box to an arrayList and creates the box object.
 	 * @param box The box to add.
@@ -83,8 +82,7 @@ public class BoxConfiguration {
 	public void addBox(Box box) {
 		this.boxes.add(box);
 	}
-	
-	
+
 	/**
 	 * Adds the connections between two boxes.
 	 * @param nameBox1 Name of the upper box.
@@ -102,7 +100,7 @@ public class BoxConfiguration {
 			}
 		}
 	}
-	
+
 	/**
 	 * Textual presentation of all boxes in sysout.
 	 */
@@ -111,7 +109,7 @@ public class BoxConfiguration {
 			box.presentBox();
 		}
 	}
-	
+
 	/**
 	 * Presentation of the box config in the text area.
 	 * @param mainText The text area where the text is to be printed.
@@ -121,7 +119,7 @@ public class BoxConfiguration {
 			mainText.append(box.getNeighbors());
 		}
 	}
-	
+
 	/**
 	 * Removes a box from the list if it's a top box.
 	 * @param box The box to remove from the list.
@@ -134,7 +132,7 @@ public class BoxConfiguration {
 		} 
 		System.err.println("Box " + box.getName() + " is not on the top.");
 	}
-	
+
 	/**
 	 * Returns whether the box configuration can be solved with the number of
 	 * workers.
@@ -147,8 +145,7 @@ public class BoxConfiguration {
 		}
 		return false;
 	}
-	
-	
+
 	/**
 	 * Creates the box config by reading a file.
 	 * @param filename The file to be read. Absolute path.
@@ -159,7 +156,7 @@ public class BoxConfiguration {
 			FileInputStream fstream = new FileInputStream(filename);
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			
+
 			String strLine;
 			int noOfBoxes = Integer.parseInt(br.readLine()); /* The number of boxes */
 			for (int i = 0; i < noOfBoxes; i++) {
@@ -168,7 +165,7 @@ public class BoxConfiguration {
 					this.addBox(new Box(strLine.split(" ")[0], Integer.parseInt(strLine.split(" ")[1])));
 				}
 			}
-			
+
 			/* The second integer which is the number of connections */
 			int noOfConnections = Integer.parseInt(br.readLine());
 			for (int i = 0; i < noOfConnections; i++) {
@@ -176,19 +173,19 @@ public class BoxConfiguration {
 				this.addConnection(strLine.split(" ")[0], strLine.split(" ")[1]);				
 			}
 			in.close();
-				
+
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * @return int Minimum number of required persons to solve the boxConfig.
 	 */
 	public int getMinPersons() {
 		return minPersons;
 	}
-	
+
 	public void loadConnections() {
 		onlyConnections = true;
 		createFromFile(MainFrame.PATH + MainFrame.FILENAME);

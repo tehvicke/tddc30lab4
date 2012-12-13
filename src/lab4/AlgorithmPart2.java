@@ -9,7 +9,9 @@ import javax.swing.JTextArea;
 
 /**
  * An algorithm for the second part. Takes number of workers and adapts
- * the boxing to that. 
+ * the boxing to that. Sorts the prio list so that the least heavy boxes
+ * are to be chosen first for making sure that the most number of boxes
+ * are being moved at the same time.
  * @author Viktor, Petter
  *
  */
@@ -59,6 +61,7 @@ public class AlgorithmPart2 {
 	 * The actual "moving"-algorithm.
 	 */
 	private void move() {
+		optimiseList();
 		isRunning = true;
 		stepsToSolve = 0;
 		ArrayList<Box> boxesToMove = new ArrayList<Box>();
@@ -104,7 +107,6 @@ public class AlgorithmPart2 {
 	}
 
 	/**
-	 * 
 	 * @return The steps to solve the current algorithm.
 	 */
 	public int getSteps() {
@@ -123,5 +125,24 @@ public class AlgorithmPart2 {
 	 */
 	public void setUnsilent() {
 		this.silent = false;
+	}
+	
+	/**
+	 * Optimises the list according to the weight ranging from
+	 * low to high.
+	 */
+	private void optimiseList() {
+		ArrayList<Box> sortedList = new ArrayList<Box>();
+		while (boxconfig.boxes.size() > 0) {
+			Box leastHeavy = boxconfig.boxes.get(0);
+			for (Box box : boxconfig.boxes) {
+				if (box.getWeight() < leastHeavy.getWeight()) {
+					leastHeavy = box;
+				}
+			}
+			sortedList.add(leastHeavy);
+			this.boxconfig.boxes.remove(leastHeavy);
+		}
+		this.boxconfig.boxes = sortedList;
 	}
 }

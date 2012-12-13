@@ -27,7 +27,6 @@ public class AlgorithmPart1 {
 	private BoxConfiguration boxconfig;
 	private boolean isRunning = true;
 
-
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
