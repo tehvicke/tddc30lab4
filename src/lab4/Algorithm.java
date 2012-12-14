@@ -13,18 +13,46 @@ public abstract class Algorithm {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Class variables                            *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
-	private static JTextArea mainText;
+	private static final int TIMEINMS = 100;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	private JTextArea mainText;
+	private boolean isRunning;
+	private BoxConfiguration boxconfig;
+	private String name;
+		
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	public Algorithm(JTextArea mainText) {
+		this.name("generic");
+		this.mainText = mainText;
+	}
+	
+	public Algorithm(JTextArea mainText, String name) {
+		this.name = name;
+		this.mainText = mainText;
+	}
+	/**
+	 * 
+	 * @return True if running
+ 	 */
+	public boolean isRunning() {
+		return isRunning;
+	}
+	
+	public void start(BoxConfiguration boxconfig) {
+		this.boxconfig = boxconfig;
+		this.move();
+	}
+	
+	/* To be overridden */
+	private void move() {
 		
 	}
+	
 }
