@@ -1,7 +1,5 @@
 package lab4;
 
-import java.awt.EventQueue;
-
 import javax.swing.JTextArea;
 
 
@@ -13,27 +11,26 @@ import javax.swing.JTextArea;
  *
  */
 public class AlgorithmPart1 {
-	
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Class variables                            *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	public static int TIMEINMS = 100;
-	
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	private String name;
 	private JTextArea mainText;
 	private BoxConfiguration boxconfig;
 	private boolean isRunning = true;
-	
-	
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
+
 	/**
 	 * Default constructor
 	 */
@@ -41,7 +38,7 @@ public class AlgorithmPart1 {
 		this.name = "Easy Algorithm";
 		this.mainText = mainText;
 	}
-	
+
 	/**
 	 * Starts the sorting of boxes. Doesn't care about the weight of the box.
 	 * @param boxconfig The box configuration to sort.
@@ -50,36 +47,29 @@ public class AlgorithmPart1 {
 		this.boxconfig = boxconfig;
 		this.move();
 	}
-	
+
 	/**
 	 * Really bad and slow removing algorithm.
 	 * @param boxes
 	 */
 	private void move() {
-		(new Thread() {
-		    public void run() {
-		    	isRunning = true;
-		    	while(isRunning) {
-					for (Box box : boxconfig.boxes) {
-						if (box.isTopBox()) {
-							boxconfig.remove(box);
-							mainText.append("Box " + box.getName() + " was removed.\n");
-							break;
-						}
-					}
-					try { 
-						Thread.sleep(TIMEINMS);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					if (boxconfig.boxes.size() == 0) { // Exit criteria
-						isRunning = false;
-					}
+		isRunning = true;
+		while(boxconfig.boxes.size() > 0) {
+			for (Box box : boxconfig.boxes) {
+				if (box.isTopBox()) {
+					boxconfig.remove(box);
+					mainText.append("Box " + box.getName() + " was removed.\n");
+					break;
 				}
-		    }
-		}).start();		
+			}
+			try { 
+				Thread.sleep(TIMEINMS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}	
+		isRunning = false;
 	}
-
 	/**
 	 * 
 	 * @return True if it's currently running
