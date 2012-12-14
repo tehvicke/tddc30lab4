@@ -13,14 +13,14 @@ public abstract class Algorithm {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Class variables                            *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	private static final int TIMEINMS = 100;
+	protected static final int TIMEINMS = 100;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	private JTextArea mainText;
-	private boolean isRunning;
-	private BoxConfiguration boxconfig;
+	protected JTextArea mainText;
+	protected boolean isRunning;
+	protected BoxConfiguration boxconfig;
 	private String name;
 		
 
@@ -29,7 +29,7 @@ public abstract class Algorithm {
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 	public Algorithm(JTextArea mainText) {
-		this.name("generic");
+		this.name= "ABSTRAKT";
 		this.mainText = mainText;
 	}
 	
@@ -45,14 +45,12 @@ public abstract class Algorithm {
 		return isRunning;
 	}
 	
-	public void start(BoxConfiguration boxconfig) {
+	protected void start(BoxConfiguration boxconfig) {
 		this.boxconfig = boxconfig;
 		this.move();
 	}
 	
 	/* To be overridden */
-	private void move() {
-		
-	}
+	protected abstract void move();
 	
 }

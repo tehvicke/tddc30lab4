@@ -10,22 +10,16 @@ import javax.swing.JTextArea;
  * @author Viktor, Petter
  *
  */
-public class AlgorithmPart1 {
+public class AlgorithmPart1 extends Algorithm {
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Class variables                            *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-	public static int TIMEINMS = 100;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Object variables                           *
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-	private String name;
-	private JTextArea mainText;
-	private BoxConfiguration boxconfig;
-	private boolean isRunning = true;
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                            Functions                              *
@@ -35,24 +29,20 @@ public class AlgorithmPart1 {
 	 * Default constructor
 	 */
 	public AlgorithmPart1(JTextArea mainText) {
-		this.name = "Easy Algorithm";
-		this.mainText = mainText;
+		super(mainText,"Easy Algorithm");
 	}
 
 	/**
 	 * Starts the sorting of boxes. Doesn't care about the weight of the box.
 	 * @param boxconfig The box configuration to sort.
 	 */
-	public void start(BoxConfiguration boxconfig) {
-		this.boxconfig = boxconfig;
-		this.move();
-	}
+
 
 	/**
 	 * Really bad and slow removing algorithm.
 	 * @param boxes
 	 */
-	private void move() {
+	protected void move() {
 		isRunning = true;
 		while(boxconfig.boxes.size() > 0) {
 			for (Box box : boxconfig.boxes) {

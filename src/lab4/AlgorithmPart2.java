@@ -15,7 +15,7 @@ import javax.swing.JTextArea;
  * @author Viktor, Petter
  *
  */
-public class AlgorithmPart2 {
+public class AlgorithmPart2 extends Algorithm {
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 *                        Class variables                            *
@@ -26,9 +26,6 @@ public class AlgorithmPart2 {
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 	private int personsMax; // The number of persons 
-	private BoxConfiguration boxconfig;
-	private boolean isRunning = true;
-	private JTextArea mainText;
 	private int stepsToSolve;
 	private boolean silent = false;
 
@@ -42,7 +39,7 @@ public class AlgorithmPart2 {
 	 * @param mainText The area where text output should be put.
 	 */
 	public AlgorithmPart2(JTextArea mainText) {
-		this.mainText = mainText;
+		super(mainText,"algo2");
 	}
 
 	/**
@@ -51,16 +48,16 @@ public class AlgorithmPart2 {
 	 * @param persons The number of persons that should work. This has to be
 	 * larger than the least heavy box.
 	 */
-	public void start(BoxConfiguration boxconfig, int persons) {
+	protected void start(BoxConfiguration boxconfig, int persons) {
 		this.personsMax = persons;
-		this.boxconfig = boxconfig;
-		this.move();
+		super.start(boxconfig);
 	}
 
 	/**
 	 * The actual "moving"-algorithm.
 	 */
-	private void move() {
+	@Override
+	protected void move() {
 		optimiseList();
 		isRunning = true;
 		stepsToSolve = 0;
@@ -99,12 +96,7 @@ public class AlgorithmPart2 {
 		isRunning = false;	
 	}
 
-	/**
-	 * @return True if it's currently running.
-	 */
-	public boolean isRunning() {
-		return isRunning;
-	}
+	
 
 	/**
 	 * @return The steps to solve the current algorithm.
